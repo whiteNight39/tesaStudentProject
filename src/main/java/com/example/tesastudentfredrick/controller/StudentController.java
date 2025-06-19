@@ -83,19 +83,6 @@ public class StudentController {
         return ResponseEntity.ok().body("Student updated successfully");
     }
 
-//    @GetMapping("/id/{studentId}")
-//    public ResponseEntity<StudentResponse<Student>> getStudentById(@PathVariable Integer studentId) {
-//        Student student = studentService.getStudentById(studentId);
-//
-//        StudentResponse<Student> response = StudentResponse.<Student>builder()
-//                .studentResponseCode("00")
-//                .studentResponseMessage("SUCCESS")
-//                .studentResponseData(student)  // ← This becomes the JSON under `data`
-//                .build();
-//
-//        return ResponseEntity.ok(response);
-//    }
-
     @GetMapping("/id/{studentId}")
     public ResponseEntity<StudentResponse<?>> getStudentById(@Valid @PathVariable("studentId") Integer studentId) {
         try {
@@ -122,20 +109,66 @@ public class StudentController {
 
 
     @GetMapping("/first-name/{studentFirstName}")
-    public ResponseEntity<List<Student>> getStudentByFirstName(@Valid @PathVariable("studentFirstName") String studentFirstName) {
-        List<Student> student = studentService.getStudentByFirstName(studentFirstName);
-        return ResponseEntity.ok().body(student);
+    public ResponseEntity<StudentResponse<?>> getStudentByFirstName(@Valid @PathVariable("studentFirstName") String studentFirstName) {
+        try {
+            List<Student> students = studentService.getStudentByFirstName(studentFirstName);
+
+            StudentResponse<List<Student>> response = StudentResponse.<List<Student>>builder()
+                    .studentResponseCode("00")
+                    .studentResponseMessage("SUCCESS")
+                    .studentResponseData(students)
+                    .build();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            StudentResponse<Object> errorResponse = StudentResponse.builder()
+                    .studentResponseCode("22")
+                    .studentResponseMessage("ERROR")
+                    .studentResponseData(e.getMessage())
+                    .build();
+            return ResponseEntity.status(400).body(errorResponse);
+        }
     }
 
     @GetMapping("/search-string/{searchString}")
-    public ResponseEntity<List<Student>> getStudentBySearchString(@Valid @PathVariable("searchString") String searchString) {
-        List<Student> student = studentService.getStudentBySearchString(searchString);
-        return ResponseEntity.ok().body(student);
+    public ResponseEntity<StudentResponse<?>> getStudentBySearchString(@Valid @PathVariable("searchString") String searchString) {
+        try {
+            List<Student> students = studentService.getStudentBySearchString(searchString);
+
+            StudentResponse<List<Student>> response = StudentResponse.<List<Student>>builder()
+                    .studentResponseCode("00")
+                    .studentResponseMessage("SUCCESS")
+                    .studentResponseData(students)
+                    .build();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            StudentResponse<Object> errorResponse = StudentResponse.builder()
+                    .studentResponseCode("22")
+                    .studentResponseMessage("ERROR")
+                    .studentResponseData(e.getMessage())
+                    .build();
+            return ResponseEntity.status(400).body(errorResponse);
+        }
     }
 
     @GetMapping("/all-students")
-    public ResponseEntity<List<Student>> getAllStudents() {
-        return ResponseEntity.ok().body(studentService.getAllStudents());
+    public ResponseEntity<StudentResponse<?>> getAllStudents() {
+        try {
+            List<Student> students = studentService.getAllStudents();
+
+            StudentResponse<List<Student>> response = StudentResponse.<List<Student>>builder()
+                    .studentResponseCode("00")
+                    .studentResponseMessage("SUCCESS")
+                    .studentResponseData(students)
+                    .build();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            StudentResponse<Object> errorResponse = StudentResponse.builder()
+                    .studentResponseCode("22")
+                    .studentResponseMessage("ERROR")
+                    .studentResponseData(e.getMessage())
+                    .build();
+            return ResponseEntity.status(400).body(errorResponse);
+        }
     }
 
     @DeleteMapping("/delete-student{studentId}")
